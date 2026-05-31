@@ -122,6 +122,76 @@ const ALL_GAMES = [
     skill: 'קואורדינציה + רפלקסים',
     unlockKey: 'gameAimTrainer',
   },
+  {
+    id: 'word',
+    name: 'פיענוח מילים',
+    desc: 'סדר אותיות מבולבלות ליצירת מילים בעברית. מפתח זיהוי דפוסים ושפה.',
+    icon: '📝',
+    color: 'linear-gradient(135deg, #AB47BC, #CE93D8)',
+    shadow: 'rgba(171,71,188,0.3)',
+    skill: 'זיהוי דפוסים + שפה',
+    unlockKey: 'gameWordScramble',
+  },
+  {
+    id: 'nback',
+    name: 'N-Back',
+    desc: 'זכור צורות לפי מרחק N שלבים אחורה. משחק זיכרון עבודה מחקרי קלאסי.',
+    icon: '🔄',
+    color: 'linear-gradient(135deg, #00897B, #80CBC4)',
+    shadow: 'rgba(0,137,123,0.3)',
+    skill: 'זיכרון עבודה + עדכון',
+    unlockKey: 'gameNBack',
+  },
+  {
+    id: 'chimp',
+    name: 'מבחן השימפנזה',
+    desc: 'זכור מיקומי מספרים שמופיעים לרגע. מודד זיכרון מרחבי מודע.',
+    icon: '🐵',
+    color: 'linear-gradient(135deg, #6D4C41, #BCAAA4)',
+    shadow: 'rgba(109,76,65,0.3)',
+    skill: 'זיכרון מרחבי + מהירות',
+    unlockKey: 'gameChimpTest',
+  },
+  {
+    id: 'odd',
+    name: 'מצא את השונה',
+    desc: 'זהה את הריבוע בצבע שונה מכל השאר. ההבדל הולך וקטן ככל שמתקדמים.',
+    icon: '🔍',
+    color: 'linear-gradient(135deg, #C62828, #EF9A9A)',
+    shadow: 'rgba(198,40,40,0.3)',
+    skill: 'ראייה פריפרית + הבחנה',
+    unlockKey: 'gameOddOneOut',
+  },
+  {
+    id: 'focus',
+    name: 'רשת הקשב',
+    desc: 'זכור תאים בהירים ברשת ולחץ רק עליהם כשהם נעלמים. מפתח קשב סלקטיבי.',
+    icon: '🎯',
+    color: 'linear-gradient(135deg, #1565C0, #90CAF9)',
+    shadow: 'rgba(21,101,192,0.3)',
+    skill: 'קשב סלקטיבי + זיכרון',
+    unlockKey: 'gameFocusGrid',
+  },
+  {
+    id: 'reflex',
+    name: 'אתגר הרפלקסים',
+    desc: 'החלט במהירות אם צבע נוכחי זהה לצבע מטרה. מודד מהירות עיבוד ותגובה.',
+    icon: '⚡',
+    color: 'linear-gradient(135deg, #F57F17, #FFF59D)',
+    shadow: 'rgba(245,127,23,0.3)',
+    skill: 'מהירות תגובה + עיבוד',
+    unlockKey: 'gameReflexChallenge',
+  },
+  {
+    id: 'speed',
+    name: 'התאמה מהירה',
+    desc: 'החלט במהירות אם הצורה הנוכחית זהה לקודמת. מפתח עיבוד מהיר וזיכרון.',
+    icon: '🎴',
+    color: 'linear-gradient(135deg, #AD1457, #F48FB1)',
+    shadow: 'rgba(173,20,87,0.3)',
+    skill: 'עיבוד מהיר + זיכרון',
+    unlockKey: 'gameSpeedMatch',
+  },
 ]
 
 function GamesHub() {
@@ -132,7 +202,7 @@ function GamesHub() {
     <div>
       <section className="hero" style={{ minHeight: '50vh', padding: '80px 24px 60px' }}>
         <h1>זירת המשחקים</h1>
-        <p>דע — 12 משחקי אימון מוחי מדעיים. כל אחד מפתח יכולת קוגניטיבית אחרת. צבור נקודות כדי לפתוח משחקים חדשים!</p>
+        <p>דע — 20 משחקי אימון מוחי מדעיים. כל אחד מפתח יכולת קוגניטיבית אחרת. צבור נקודות כדי לפתוח משחקים חדשים!</p>
       </section>
 
       <section style={{ padding: '40px 24px 80px' }}>

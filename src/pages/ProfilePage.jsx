@@ -31,6 +31,17 @@ function ProfilePage() {
     { key: 'memory', name: 'זיכרון זוגות' },
     { key: 'pattern', name: 'זיכרון תבניות' },
     { key: 'numbers', name: 'זיכרון מספרים' },
+    { key: 'typing', name: 'הקלדה מהירה' },
+    { key: 'gridRecall', name: 'זיכרון רשת' },
+    { key: 'colorMatch', name: 'התאמת צבעים' },
+    { key: 'aim', name: 'אימון מיקוד' },
+    { key: 'wordScramble', name: 'פיענוח מילים' },
+    { key: 'nBack', name: 'N-Back' },
+    { key: 'chimp', name: 'מבחן השימפנזה' },
+    { key: 'oddOneOut', name: 'מצא את השונה' },
+    { key: 'focusGrid', name: 'רשת הקשב' },
+    { key: 'reflex', name: 'אתגר הרפלקסים' },
+    { key: 'speedMatch', name: 'התאמה מהירה' },
   ]
 
   return (

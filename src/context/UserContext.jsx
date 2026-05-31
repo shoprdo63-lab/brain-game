@@ -32,6 +32,12 @@ const DEFAULT_UNLOCKS = {
   gameColorMatch: false,
   gameWordScramble: false,
   gameAimTrainer: false,
+  gameNBack: false,
+  gameChimpTest: false,
+  gameOddOneOut: false,
+  gameFocusGrid: false,
+  gameReflexChallenge: false,
+  gameSpeedMatch: false,
 }
 
 function getLocalUser() {

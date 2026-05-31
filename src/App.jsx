@@ -14,6 +14,13 @@ import TypingGame from './pages/TypingGame'
 import GridRecallGame from './pages/GridRecallGame'
 import ColorMatchGame from './pages/ColorMatchGame'
 import AimTrainerGame from './pages/AimTrainerGame'
+import WordScrambleGame from './pages/WordScrambleGame'
+import NBackGame from './pages/NBackGame'
+import ChimpTestGame from './pages/ChimpTestGame'
+import OddOneOutGame from './pages/OddOneOutGame'
+import FocusGridGame from './pages/FocusGridGame'
+import ReflexChallengeGame from './pages/ReflexChallengeGame'
+import SpeedMatchGame from './pages/SpeedMatchGame'
 import BlogPage from './pages/BlogPage'
 import SciencePage from './pages/SciencePage'
 import AuthPage from './pages/AuthPage'
@@ -63,6 +70,13 @@ function AppRoutes() {
             <Route path="/game/grid" element={<GridRecallGame />} />
             <Route path="/game/color" element={<ColorMatchGame />} />
             <Route path="/game/aim" element={<AimTrainerGame />} />
+            <Route path="/game/word" element={<WordScrambleGame />} />
+            <Route path="/game/nback" element={<NBackGame />} />
+            <Route path="/game/chimp" element={<ChimpTestGame />} />
+            <Route path="/game/odd" element={<OddOneOutGame />} />
+            <Route path="/game/focus" element={<FocusGridGame />} />
+            <Route path="/game/reflex" element={<ReflexChallengeGame />} />
+            <Route path="/game/speed" element={<SpeedMatchGame />} />
             <Route path="/science" element={<SciencePage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/login" element={<AuthPage />} />

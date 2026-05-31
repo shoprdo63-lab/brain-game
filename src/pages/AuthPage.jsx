@@ -9,7 +9,7 @@ function AuthPage() {
   const [displayName, setDisplayName] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const { register, login, ensureGuest } = useUser()
+  const { register, login, loginWithGoogle, ensureGuest } = useUser()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -133,6 +133,33 @@ function AuthPage() {
             {loading ? 'טוען...' : mode === 'login' ? 'התחבר' : 'צור חשבון'}
           </button>
         </form>
+
+        <div style={{ textAlign: 'center', marginTop: 16 }}>
+          <button
+            type="button"
+            onClick={async () => {
+              try { await loginWithGoogle() } catch (err) { setError(err.message) }
+            }}
+            style={{
+              width: '100%',
+              padding: '12px 0',
+              borderRadius: 12,
+              border: '2px solid var(--border)',
+              background: 'var(--surface)',
+              color: 'var(--text)',
+              fontFamily: 'inherit',
+              fontSize: 15,
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+            }}
+          >
+            <span style={{ fontSize: 18 }}>G</span> התחבר עם Google
+          </button>
+        </div>
 
         <div style={{ textAlign: 'center', marginTop: 20 }}>
           <button

@@ -21,7 +21,10 @@ function ProfilePage() {
 
   if (!userData) return null
 
-  const highScores = userData.highScores || {}
+  const displayName = userData.displayName || userData.display_name || 'משתמש'
+  const points = userData.points ?? 0
+  const totalGamesPlayed = userData.totalGamesPlayed ?? userData.total_games_played ?? 0
+  const highScores = userData.highScores || userData.high_scores || {}
   const games = [
     { key: 'schulte', name: 'שולטה טייבל' },
     { key: 'reaction', name: 'מהירות תגובה' },
@@ -61,9 +64,9 @@ function ProfilePage() {
             boxShadow: 'var(--glow-primary)',
           }}
         >
-          {userData.displayName?.[0] || '👤'}
+          {displayName?.[0] || '👤'}
         </div>
-        <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>{userData.displayName}</h2>
+        <h2 style={{ fontSize: 28, fontWeight: 800, marginBottom: 4 }}>{displayName}</h2>
         {userData.email && <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>{userData.email}</p>}
         {isGuest && <p style={{ color: 'var(--warning)', fontSize: 13, marginTop: 4 }}>מצב אורח — התחבר כדי לשמור נתונים בענן</p>}
       </div>
@@ -71,11 +74,11 @@ function ProfilePage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12, marginBottom: 32 }}>
         <div style={{ background: 'var(--surface)', padding: '20px', borderRadius: 16, border: '1px solid var(--border)', textAlign: 'center' }}>
           <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4 }}>נקודות</p>
-          <p style={{ fontSize: 32, fontWeight: 800, color: 'var(--primary)' }}>{userData.points || 0}</p>
+          <p style={{ fontSize: 32, fontWeight: 800, color: 'var(--primary)' }}>{points}</p>
         </div>
         <div style={{ background: 'var(--surface)', padding: '20px', borderRadius: 16, border: '1px solid var(--border)', textAlign: 'center' }}>
           <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4 }}>משחקים</p>
-          <p style={{ fontSize: 32, fontWeight: 800 }}>{userData.totalGamesPlayed || 0}</p>
+          <p style={{ fontSize: 32, fontWeight: 800 }}>{totalGamesPlayed}</p>
         </div>
         <div style={{ background: 'var(--surface)', padding: '20px', borderRadius: 16, border: '1px solid var(--border)', textAlign: 'center' }}>
           <p style={{ fontSize: 12, color: 'var(--text-secondary)', marginBottom: 4 }}>שיאים</p>

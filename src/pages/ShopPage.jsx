@@ -138,11 +138,13 @@ function ShopPage() {
   }
 
   const handlePurchase = async (item) => {
-    if (userData.unlocks?.[item.id]) {
+    const unlocks = userData.unlocks || {}
+    const points = userData.points ?? 0
+    if (unlocks[item.id]) {
       setMessage(`${item.name} כבר רכושת!`)
       return
     }
-    if ((userData.points || 0) < item.cost) {
+    if (points < item.cost) {
       setMessage('אין מספיק נקודות — שחק כדי לצבור עוד!')
       return
     }
@@ -161,7 +163,7 @@ function ShopPage() {
         <p style={{ color: 'var(--text-secondary)' }}>צבור נקודות במשחקים ופתח תכונות ומשחקים חדשים</p>
         <div style={{ marginTop: 16, display: 'inline-block', background: 'var(--surface)', padding: '12px 28px', borderRadius: 14, border: '1px solid var(--border)' }}>
           <span style={{ fontSize: 14, color: 'var(--text-secondary)' }}>נקודות זמינות: </span>
-          <span style={{ fontSize: 24, fontWeight: 800, color: 'var(--primary)' }}>{userData.points || 0}</span>
+          <span style={{ fontSize: 24, fontWeight: 800, color: 'var(--primary)' }}>{userData.points ?? userData.points ?? 0}</span>
         </div>
       </div>
 
@@ -183,8 +185,10 @@ function ShopPage() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
         {SHOP_ITEMS.map(item => {
-          const unlocked = userData.unlocks?.[item.id]
-          const canAfford = (userData.points || 0) >= item.cost
+          const unlocks = userData.unlocks || {}
+          const points = userData.points ?? 0
+          const unlocked = unlocks[item.id]
+          const canAfford = points >= item.cost
           return (
             <div
               key={item.id}

@@ -1,19 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react'
-import {
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
-} from 'firebase/auth'
-import {
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  onSnapshot,
-} from 'firebase/firestore'
-import { auth, db } from '../firebase'
+import { supabase } from '../supabase'
 
 const UserContext = createContext(null)
 
@@ -53,33 +39,63 @@ function setLocalUser(data) {
 }
 
 export function UserProvider({ children }) {
-  const [firebaseUser, setFirebaseUser] = useState(null)
+  const [sessionUser, setSessionUser] = useState(null)
   const [userData, setUserData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [isGuest, setIsGuest] = useState(false)
 
+  const fetchProfile = useCallback(async (userId) => {
+    if (!supabase) return null
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .single()
+    if (error && error.code !== 'PGRST116') {
+      console.error('fetchProfile error:', error)
+    }
+    return data
+  }, [])
+
+  const createProfile = useCallback(async (user) => {
+    if (!supabase) return null
+    const displayName = user.user_metadata?.display_name || user.email?.split('@')[0] || 'משתמש'
+    const newProfile = {
+      id: user.id,
+      display_name: displayName,
+      email: user.email,
+      points: 0,
+      total_games_played: 0,
+      unlocks: DEFAULT_UNLOCKS,
+      created_at: new Date().toISOString(),
+      high_scores: {},
+    }
+    const { error } = await supabase.from('profiles').insert(newProfile)
+    if (error) console.error('createProfile error:', error)
+    return newProfile
+  }, [])
+
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (user) => {
-      setFirebaseUser(user)
+    if (!supabase) {
+      const guest = getLocalUser()
+      if (guest) {
+        setIsGuest(true)
+        setUserData(guest)
+      }
+      setLoading(false)
+      return () => {}
+    }
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      const user = session?.user ?? null
+      setSessionUser(user)
       if (user) {
         setIsGuest(false)
-        const ref = doc(db, 'users', user.uid)
-        const snap = await getDoc(ref)
-        if (snap.exists()) {
-          setUserData(snap.data())
-        } else {
-          const newData = {
-            displayName: user.displayName || user.email?.split('@')[0] || 'משתמש',
-            email: user.email,
-            points: 0,
-            totalGamesPlayed: 0,
-            unlocks: { ...DEFAULT_UNLOCKS },
-            createdAt: Date.now(),
-            highScores: {},
-          }
-          await setDoc(ref, newData)
-          setUserData(newData)
+        let profile = await fetchProfile(user.id)
+        if (!profile) {
+          profile = await createProfile(user)
         }
+        setUserData(profile)
       } else {
         const guest = getLocalUser()
         if (guest) {
@@ -92,54 +108,80 @@ export function UserProvider({ children }) {
       }
       setLoading(false)
     })
-    return unsub
-  }, [])
 
-  useEffect(() => {
-    if (!firebaseUser) return
-    const ref = doc(db, 'users', firebaseUser.uid)
-    const unsub = onSnapshot(ref, (snap) => {
-      if (snap.exists()) setUserData(snap.data())
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      const user = session?.user ?? null
+      setSessionUser(user)
+      if (user) {
+        setIsGuest(false)
+        let profile = await fetchProfile(user.id)
+        if (!profile) {
+          profile = await createProfile(user)
+        }
+        setUserData(profile)
+      } else {
+        const guest = getLocalUser()
+        if (guest) {
+          setIsGuest(true)
+          setUserData(guest)
+        }
+      }
+      setLoading(false)
     })
-    return unsub
-  }, [firebaseUser])
+
+    return () => subscription.unsubscribe()
+  }, [fetchProfile, createProfile])
 
   const register = useCallback(async (email, password, displayName) => {
-    const cred = await createUserWithEmailAndPassword(auth, email, password)
-    if (displayName) {
-      await updateProfile(cred.user, { displayName })
-    }
-    return cred.user
-  }, [auth])
+    if (!supabase) throw new Error('Supabase not configured')
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { display_name: displayName } },
+    })
+    if (error) throw error
+    return data.user
+  }, [])
 
   const login = useCallback(async (email, password) => {
-    const cred = await signInWithEmailAndPassword(auth, email, password)
-    return cred.user
-  }, [auth])
+    if (!supabase) throw new Error('Supabase not configured')
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) throw error
+    return data.user
+  }, [])
+
+  const loginWithGoogle = useCallback(async () => {
+    if (!supabase) throw new Error('Supabase not configured')
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: window.location.origin },
+    })
+    if (error) throw error
+  }, [])
 
   const logout = useCallback(async () => {
-    await signOut(auth)
-    setFirebaseUser(null)
+    if (supabase) await supabase.auth.signOut()
+    setSessionUser(null)
     setUserData(null)
     setIsGuest(false)
-  }, [auth])
+  }, [])
 
   const addPoints = useCallback(async (points, gameKey, score) => {
-    if (firebaseUser) {
-      const ref = doc(db, 'users', firebaseUser.uid)
-      const snap = await getDoc(ref)
-      if (!snap.exists()) return
-      const data = snap.data()
-      const newPoints = (data.points || 0) + points
-      const newHighScores = { ...(data.highScores || {}) }
+    if (sessionUser && supabase) {
+      const profile = await fetchProfile(sessionUser.id)
+      if (!profile) return
+      const newPoints = (profile.points || 0) + points
+      const newHighScores = { ...(profile.high_scores || {}) }
       if (score > (newHighScores[gameKey] || 0)) {
         newHighScores[gameKey] = score
       }
-      await updateDoc(ref, {
+      const { error } = await supabase.from('profiles').update({
         points: newPoints,
-        totalGamesPlayed: (data.totalGamesPlayed || 0) + 1,
-        highScores: newHighScores,
-      })
+        total_games_played: (profile.total_games_played || 0) + 1,
+        high_scores: newHighScores,
+      }).eq('id', sessionUser.id)
+      if (error) console.error('addPoints error:', error)
+      else setUserData({ ...profile, points: newPoints, total_games_played: (profile.total_games_played || 0) + 1, high_scores: newHighScores })
     } else if (isGuest && userData) {
       const updated = {
         ...userData,
@@ -153,22 +195,26 @@ export function UserProvider({ children }) {
       setUserData(updated)
       setLocalUser(updated)
     }
-  }, [firebaseUser, isGuest, userData])
+  }, [sessionUser, isGuest, userData, fetchProfile])
 
   const purchase = useCallback(async (itemKey, cost) => {
     if (!userData || userData.points < cost) return false
     const newUnlocks = { ...(userData.unlocks || {}), [itemKey]: true }
     const newPoints = userData.points - cost
-    if (firebaseUser) {
-      const ref = doc(db, 'users', firebaseUser.uid)
-      await updateDoc(ref, { points: newPoints, unlocks: newUnlocks })
+    if (sessionUser && supabase) {
+      const { error } = await supabase.from('profiles').update({
+        points: newPoints,
+        unlocks: newUnlocks,
+      }).eq('id', sessionUser.id)
+      if (error) { console.error('purchase error:', error); return false }
+      setUserData({ ...userData, points: newPoints, unlocks: newUnlocks })
     } else if (isGuest) {
       const updated = { ...userData, points: newPoints, unlocks: newUnlocks }
       setUserData(updated)
       setLocalUser(updated)
     }
     return true
-  }, [userData, firebaseUser, isGuest])
+  }, [userData, sessionUser, isGuest])
 
   const ensureGuest = useCallback(() => {
     if (userData) return
@@ -187,18 +233,19 @@ export function UserProvider({ children }) {
   }, [userData])
 
   const value = useMemo(() => ({
-    user: firebaseUser,
+    user: sessionUser,
     userData,
     isGuest,
     loading,
     register,
     login,
+    loginWithGoogle,
     logout,
     addPoints,
     purchase,
     ensureGuest,
-    isLoggedIn: !!firebaseUser,
-  }), [firebaseUser, userData, isGuest, loading, register, login, logout, addPoints, purchase, ensureGuest])
+    isLoggedIn: !!sessionUser,
+  }), [sessionUser, userData, isGuest, loading, register, login, loginWithGoogle, logout, addPoints, purchase, ensureGuest])
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }

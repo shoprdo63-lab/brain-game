@@ -173,6 +173,7 @@ function QuickMathGame() {
       {phase === 'playing' && problem && (
         <div style={{ textAlign: 'center' }}>
           <div
+            dir="ltr"
             style={{
               fontSize: 48,
               fontWeight: 700,

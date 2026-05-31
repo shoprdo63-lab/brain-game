@@ -1,8 +1,9 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 
 function generateProblem(level) {
-  const ops = ['+', '-', '×']
-  const op = ops[Math.floor(Math.random() * (level >= 3 ? 3 : 2))]
+  const ops = ['+', '-', '×', '÷']
+  const opCount = level >= 5 ? 4 : level >= 3 ? 3 : 2
+  const op = ops[Math.floor(Math.random() * opCount)]
   let a, b
 
   if (op === '+') {
@@ -11,15 +12,20 @@ function generateProblem(level) {
   } else if (op === '-') {
     a = Math.floor(Math.random() * (15 + level * 5)) + 5
     b = Math.floor(Math.random() * a) + 1
-  } else {
+  } else if (op === '×') {
     a = Math.floor(Math.random() * (5 + level)) + 2
     b = Math.floor(Math.random() * (5 + level)) + 2
+  } else {
+    b = Math.floor(Math.random() * (4 + level)) + 2
+    const result = Math.floor(Math.random() * (5 + level)) + 2
+    a = b * result
   }
 
   let answer
   if (op === '+') answer = a + b
   else if (op === '-') answer = a - b
-  else answer = a * b
+  else if (op === '×') answer = a * b
+  else answer = a / b
 
   return { text: `${a} ${op} ${b} = ?`, answer, a, b, op }
 }
@@ -175,6 +181,7 @@ function QuickMathGame() {
           <div
             dir="ltr"
             style={{
+              direction: 'ltr',
               fontSize: 48,
               fontWeight: 700,
               marginBottom: 24,
@@ -188,11 +195,13 @@ function QuickMathGame() {
 
           <input
             ref={inputRef}
+            dir="ltr"
             type="number"
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder="תשובה..."
             style={{
+              direction: 'ltr',
               fontSize: 28,
               padding: '16px 24px',
               borderRadius: 16,

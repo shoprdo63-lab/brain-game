@@ -17,6 +17,22 @@ function SequenceGame() {
   const [highScore, setHighScore] = useState(() => Number.parseInt(localStorage.getItem('sequenceHighScore')) || 0)
   const [showing, setShowing] = useState(false)
   const timeoutRef = useRef(null)
+  const timeoutsRef = useRef([])
+  const mountedRef = useRef(true)
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+      timeoutsRef.current.forEach(clearTimeout)
+      timeoutsRef.current = []
+      clearTimeout(timeoutRef.current)
+    }
+  }, [])
+
+  const safeSetState = useCallback((setter) => {
+    if (mountedRef.current) setter()
+  }, [])
 
   const playTone = useCallback((freq, duration = 200) => {
     try {
@@ -35,23 +51,26 @@ function SequenceGame() {
   }, [])
 
   const flashColor = useCallback((colorId, duration = 400) => {
-    setActiveColor(colorId)
+    safeSetState(() => setActiveColor(colorId))
     playTone(300 + colorId * 150, duration)
-    timeoutRef.current = setTimeout(() => setActiveColor(null), duration)
-  }, [playTone])
+    timeoutRef.current = setTimeout(() => safeSetState(() => setActiveColor(null)), duration)
+  }, [playTone, safeSetState])
 
   const showSequence = useCallback(async (seq) => {
-    setShowing(true)
-    setPhase('watch')
+    safeSetState(() => setShowing(true))
+    safeSetState(() => setPhase('watch'))
     for (let i = 0; i < seq.length; i++) {
+      if (!mountedRef.current) return
       await new Promise(r => setTimeout(r, 600))
+      if (!mountedRef.current) return
       flashColor(seq[i], 350)
       await new Promise(r => setTimeout(r, 350))
     }
-    setShowing(false)
-    setPhase('play')
-    setPlayerIndex(0)
-  }, [flashColor])
+    if (!mountedRef.current) return
+    safeSetState(() => setShowing(false))
+    safeSetState(() => setPhase('play'))
+    safeSetState(() => setPlayerIndex(0))
+  }, [flashColor, safeSetState])
 
   const startGame = useCallback(() => {
     const newSeq = [Math.floor(Math.random() * 4)]
@@ -59,7 +78,8 @@ function SequenceGame() {
     setLevel(1)
     setScore(0)
     setPhase('watch')
-    setTimeout(() => showSequence(newSeq), 500)
+    const t = setTimeout(() => showSequence(newSeq), 500)
+    timeoutsRef.current.push(t)
   }, [showSequence])
 
   const handleColorClick = useCallback((colorId) => {
@@ -79,7 +99,8 @@ function SequenceGame() {
         setSequence(nextSeq)
         setLevel(l => l + 1)
         setPhase('watch')
-        setTimeout(() => showSequence(nextSeq), 800)
+        const t = setTimeout(() => showSequence(nextSeq), 800)
+        timeoutsRef.current.push(t)
       } else {
         setPlayerIndex(i => i + 1)
       }
@@ -88,10 +109,6 @@ function SequenceGame() {
       playTone(150, 500)
     }
   }, [phase, showing, sequence, playerIndex, score, level, highScore, flashColor, playTone, showSequence])
-
-  useEffect(() => {
-    return () => clearTimeout(timeoutRef.current)
-  }, [])
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 64px)', padding: 24 }}>

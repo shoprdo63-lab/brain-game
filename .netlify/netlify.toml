@@ -10,7 +10,6 @@ headers = []
 publish = "C:\\Users\\shopr\\Desktop\\schultetable\\dist"
 publishOrigin = "config"
 commandOrigin = "config"
-base = "C:\\Users\\shopr\\Desktop\\schultetable"
 command = "npm run build"
 
 [build.environment]

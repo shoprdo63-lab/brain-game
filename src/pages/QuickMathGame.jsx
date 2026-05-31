@@ -38,13 +38,23 @@ function QuickMathGame() {
   const [feedback, setFeedback] = useState(null)
   const timerRef = useRef(null)
   const inputRef = useRef(null)
+  const timeoutsRef = useRef([])
+
+  useEffect(() => {
+    return () => {
+      clearInterval(timerRef.current)
+      timeoutsRef.current.forEach(clearTimeout)
+      timeoutsRef.current = []
+    }
+  }, [])
 
   const nextProblem = useCallback((lvl) => {
     const p = generateProblem(lvl)
     setProblem(p)
     setInput('')
     setFeedback(null)
-    setTimeout(() => inputRef.current?.focus(), 50)
+    const t = setTimeout(() => inputRef.current?.focus(), 50)
+    timeoutsRef.current.push(t)
   }, [])
 
   const startGame = useCallback(() => {
@@ -96,11 +106,12 @@ function QuickMathGame() {
       setWrong(w => w + 1)
       setStreak(0)
       setFeedback('wrong')
-      setTimeout(() => {
+      const t = setTimeout(() => {
         setInput('')
         setFeedback(null)
         inputRef.current?.focus()
       }, 600)
+      timeoutsRef.current.push(t)
     }
   }, [problem, input, phase, score, level, correct, streak, highScore, nextProblem])
 
@@ -111,10 +122,6 @@ function QuickMathGame() {
     window.addEventListener('keydown', handleKey)
     return () => window.removeEventListener('keydown', handleKey)
   }, [submitAnswer])
-
-  useEffect(() => {
-    return () => clearInterval(timerRef.current)
-  }, [])
 
   const accuracy = correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0
 

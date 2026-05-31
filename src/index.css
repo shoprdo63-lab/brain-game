@@ -633,6 +633,11 @@ body {
   line-height: 1.7;
 }
 
+.victory-card .restart-btn {
+  position: relative;
+  z-index: 2;
+}
+
 /* Blog */
 .blog-page {
   max-width: 900px;

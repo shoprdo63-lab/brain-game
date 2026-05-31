@@ -28,8 +28,20 @@ function StroopGame() {
   const timerRef = useRef(null)
   const startTimeRef = useRef(0)
   const totalTimeRef = useRef(0)
+  const timeoutsRef = useRef([])
+  const mountedRef = useRef(true)
 
   const TOTAL_ROUNDS = 20
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+      clearInterval(timerRef.current)
+      timeoutsRef.current.forEach(clearTimeout)
+      timeoutsRef.current = []
+    }
+  }, [])
 
   const nextTrial = useCallback(() => {
     const t = generateTrial()
@@ -89,13 +101,12 @@ function StroopGame() {
       clearInterval(timerRef.current)
       setPhase('over')
     } else {
-      setTimeout(() => nextTrial(), isCorrect ? 400 : 800)
+      const t = setTimeout(() => {
+        if (mountedRef.current) nextTrial()
+      }, isCorrect ? 400 : 800)
+      timeoutsRef.current.push(t)
     }
   }, [phase, trial, round, score, highScore, nextTrial])
-
-  useEffect(() => {
-    return () => clearInterval(timerRef.current)
-  }, [])
 
   const accuracy = correct + wrong > 0 ? Math.round((correct / (correct + wrong)) * 100) : 0
   const avgTime = correct + wrong > 0 ? Math.round(totalTimeRef.current / (correct + wrong)) : 0

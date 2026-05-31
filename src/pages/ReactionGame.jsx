@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 
 const PHASE = {
   READY: 'ready',
@@ -53,6 +53,10 @@ function ReactionGame() {
       }
     }
   }, [phase, history, round, startRound])
+
+  useEffect(() => {
+    return () => clearTimeout(timerRef.current)
+  }, [])
 
   const avg = history.length > 0 ? Math.round(history.reduce((a, b) => a + b, 0) / history.length) : 0
   const best = history.length > 0 ? Math.min(...history) : 0

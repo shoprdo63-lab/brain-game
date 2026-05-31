@@ -2,7 +2,7 @@ function SciencePage() {
   return (
     <div className="science-page">
       <div className="science-hero">
-        <h1>המדע מאחורי סינפס</h1>
+        <h1>המדע מאחורי דע</h1>
         <p>איך משחקי אימון קוגניטיבי מחזקים את המוח שלך — הסבר מדעי מקיף</p>
       </div>
 

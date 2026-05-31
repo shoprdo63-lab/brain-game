@@ -15,8 +15,8 @@ function App() {
       <div>
         <nav className="nav-bar">
           <NavLink to="/" className="nav-logo">
-            <div className="nav-logo-icon">ס</div>
-            <span>סינפס</span>
+            <div className="nav-logo-icon">ד</div>
+            <span>דע</span>
           </NavLink>
           <div className="nav-links">
             <NavLink to="/" className={({isActive}) => 'nav-link' + (isActive ? ' active' : '')} end>דף הבית</NavLink>

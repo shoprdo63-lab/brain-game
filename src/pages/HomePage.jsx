@@ -11,7 +11,7 @@ function HomePage() {
   return (
     <div>
       <section className="hero">
-        <h1>סינפס</h1>
+        <h1>דע</h1>
         <p>אקדמיית אימון קוגניטיבי — 5 משחקי מוח מדעיים לשיפור תשומת הלב, זיכרון, מהירות תגובה וחישוב מנטלי.</p>
         <div style={{ marginTop: 32 }}>
           <Link to="/games" style={{
@@ -108,7 +108,7 @@ function HomePage() {
       </section>
 
       <footer className="footer">
-        <p style={{ color: 'white', fontSize: 16, fontWeight: 600, marginBottom: 8 }}>סינפס — אקדמיית אימון קוגניטיבי</p>
+        <p style={{ color: 'white', fontSize: 16, fontWeight: 600, marginBottom: 8 }}>דע — אקדמיית אימון קוגניטיבי</p>
         <p>האתר נבנה כדי לעזור לאנשים לשפר את יכולות הקוגניציה שלהם בדרך מהנה ומדעית</p>
         <p style={{ marginTop: 16, fontSize: 12, opacity: 0.6 }}>© 2025 Synapse Cognitive Training</p>
       </footer>

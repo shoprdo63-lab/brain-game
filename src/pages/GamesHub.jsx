@@ -53,7 +53,7 @@ function GamesHub() {
     <div>
       <section className="hero" style={{ minHeight: '50vh', padding: '80px 24px 60px' }}>
         <h1>זירת המשחקים</h1>
-        <p>5 משחקי אימון מוחי מדעיים. כל אחד מפתח יכולת קוגניטיבית אחרת. התחל לאמן היום.</p>
+        <p>דע — 5 משחקי אימון מוחי מדעיים. כל אחד מפתח יכולת קוגניטיבית אחרת. התחל לאמן היום.</p>
       </section>
 
       <section style={{ padding: '40px 24px 80px' }}>

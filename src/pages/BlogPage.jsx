@@ -78,7 +78,7 @@ function BlogPage() {
   return (
     <div className="blog-page">
       <div className="blog-hero">
-        <h1>בלוג סינפס</h1>
+        <h1>בלוג דע</h1>
         <p>מאמרים, מחקרים וטיפים לשיפור היכולות הקוגניטיביות שלך</p>
       </div>
 

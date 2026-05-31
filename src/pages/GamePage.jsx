@@ -21,7 +21,7 @@ function SidePanel({ size, onSizeChange, gamesPlayed, bestTime }) {
   return (
     <div className="game-sidebar">
       <div className="sidebar-title">
-        <p className="label">סינפס</p>
+        <p className="label">דע</p>
         <p className="sub">שולטה טייבל — אימון ראייה פריפרית</p>
       </div>
       <div className="grid-size-section">

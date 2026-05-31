@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react'
 import { supabase } from '../supabase'
+import { MINI_GAME_UNLOCK_KEYS } from '../data/miniGamesData'
 
 const UserContext = createContext(null)
 
@@ -7,24 +8,32 @@ export function useUser() {
   return useContext(UserContext)
 }
 
-const DEFAULT_UNLOCKS = {
-  proMode: false,
-  extraTime: false,
-  themeDark: true,
-  themeNeon: false,
-  hints: false,
-  gameTyping: false,
-  gameGridRecall: false,
-  gameColorMatch: false,
-  gameWordScramble: false,
-  gameAimTrainer: false,
-  gameNBack: false,
-  gameChimpTest: false,
-  gameOddOneOut: false,
-  gameFocusGrid: false,
-  gameReflexChallenge: false,
-  gameSpeedMatch: false,
+function buildDefaultUnlocks() {
+  const base = {
+    proMode: false,
+    extraTime: false,
+    themeDark: true,
+    themeNeon: false,
+    hints: false,
+    gameTyping: false,
+    gameGridRecall: false,
+    gameColorMatch: false,
+    gameWordScramble: false,
+    gameAimTrainer: false,
+    gameNBack: false,
+    gameChimpTest: false,
+    gameOddOneOut: false,
+    gameFocusGrid: false,
+    gameReflexChallenge: false,
+    gameSpeedMatch: false,
+  }
+  for (const key of MINI_GAME_UNLOCK_KEYS) {
+    base[key] = false
+  }
+  return base
 }
+
+const DEFAULT_UNLOCKS = buildDefaultUnlocks()
 
 function getLocalUser() {
   try {

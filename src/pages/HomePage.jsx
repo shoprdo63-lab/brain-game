@@ -12,7 +12,7 @@ function HomePage() {
     <div>
       <section className="hero">
         <h1>דע</h1>
-        <p>אקדמיית אימון קוגניטיבי — 8 משחקי מוח מדעיים לשיפור תשומת הלב, זיכרון, מהירות תגובה וחישוב מנטלי.</p>
+        <p>אקדמיית אימון קוגניטיבי — 100+ משחקי מוח מדעיים לשיפור תשומת הלב, זיכרון, מהירות תגובה וחישוב מנטלי.</p>
         <div style={{ marginTop: 32 }}>
           <Link to="/games" style={{
             display: 'inline-block',
@@ -30,6 +30,41 @@ function HomePage() {
           onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(255,107,53,0.4), 0 0 40px rgba(255,107,53,0.15)'; }}>
             התחל לאמן ➜
           </Link>
+        </div>
+      </section>
+
+      <section style={{ padding: '60px 24px' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 16, textAlign: 'center', marginBottom: 48 }}>
+          {[
+            { n: '100+', t: 'משחקים' },
+            { n: '14', t: 'קטגוריות' },
+            { n: '∞', t: 'תרגילים ייחודיים' },
+            { n: '0₪', t: 'חינם לגמרי' },
+          ].map((s, i) => (
+            <div key={i} style={{ padding: '20px 12px', background: 'var(--surface)', borderRadius: 16, border: '1px solid var(--border)' }}>
+              <div style={{ fontSize: 28, fontWeight: 800, background: 'linear-gradient(135deg, var(--primary), var(--accent))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>{s.n}</div>
+              <div style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4 }}>{s.t}</div>
+            </div>
+          ))}
+        </div>
+        <h2 className="section-title">משחקים מומלצים</h2>
+        <p className="section-subtitle">התחילו עם אחד מהמשחקים הפופולריים — כל אחד מפתח מיומנות קוגניטיבית אחרת</p>
+        <div style={{ maxWidth: 900, margin: '32px auto 0', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
+          {[
+            { id: 'math-add-easy', name: 'חיבור קל', icon: '➕', color: 'linear-gradient(135deg, #FF6B35, #FF8C42)', shadow: 'rgba(255,107,53,0.3)', skill: 'חישוב מנטלי', desc: 'חבר מספרים קטנים במהירות' },
+            { id: 'mem-digits-4', name: 'זיכרון 4 ספרות', icon: '🔢', color: 'linear-gradient(135deg, #7C4DFF, #B388FF)', shadow: 'rgba(124,77,255,0.3)', skill: 'זיכרון ספרתי', desc: 'זכור סדר ספרות לרגע' },
+            { id: 'react-color', name: 'תגובה לצבע', icon: '🟢', color: 'linear-gradient(135deg, #00C853, #69F0AE)', shadow: 'rgba(0,200,83,0.3)', skill: 'רפלקסים', desc: 'לחץ כשהמסך משתנה לירוק' },
+            { id: 'word-scramble-easy', name: 'מילים מבולבלות', icon: '📝', color: 'linear-gradient(135deg, #FF4081, #F8BBD0)', shadow: 'rgba(255,64,129,0.3)', skill: 'שפה', desc: 'סדר מילים בעברית' },
+          ].map(g => (
+            <Link key={g.id} to={`/game/${g.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div className="card" style={{ textAlign: 'center' }}>
+                <div style={{ width: 64, height: 64, borderRadius: 18, background: g.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, margin: '0 auto 16px', boxShadow: `0 8px 24px ${g.shadow}` }}>{g.icon}</div>
+                <h3 style={{ fontSize: 20, marginBottom: 6 }}>{g.name}</h3>
+                <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 12 }}>{g.desc}</p>
+                <span style={{ display: 'inline-block', padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 600, background: 'rgba(255,255,255,0.05)', color: 'var(--text-secondary)', border: '1px solid var(--border)' }}>{g.skill}</span>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 

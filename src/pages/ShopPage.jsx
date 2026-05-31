@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useUser } from '../context/UserContext'
+import { miniGames } from '../data/miniGamesData'
 
 const SHOP_ITEMS = [
   {
@@ -209,6 +210,58 @@ function ShopPage() {
                 <span style={{ fontSize: 20, fontWeight: 800, color: item.color }}>{item.cost} ⭐</span>
                 <button
                   onClick={() => handlePurchase(item)}
+                  disabled={unlocked || !canAfford}
+                  style={{
+                    padding: '8px 20px',
+                    borderRadius: 10,
+                    border: 'none',
+                    background: unlocked ? 'var(--success)' : canAfford ? 'linear-gradient(135deg, var(--primary), var(--primary-dark))' : 'var(--surface-solid)',
+                    color: 'white',
+                    fontFamily: 'inherit',
+                    fontWeight: 600,
+                    fontSize: 14,
+                    cursor: unlocked || !canAfford ? 'not-allowed' : 'pointer',
+                    opacity: unlocked || !canAfford ? 0.6 : 1,
+                  }}
+                >
+                  {unlocked ? 'נרכש' : canAfford ? 'רכוש' : 'חסרות נקודות'}
+                </button>
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      <div style={{ margin: '48px 0 24px', textAlign: 'center' }}>
+        <h3 style={{ fontSize: 22, fontWeight: 700 }}>🎮 משחקים מיני</h3>
+        <p style={{ color: 'var(--text-secondary)', fontSize: 14, marginTop: 6 }}>פתח משחקים חדשים וצבור עוד נקודות</p>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 16 }}>
+        {miniGames.map(game => {
+          const unlocks = userData.unlocks || {}
+          const points = userData.points ?? 0
+          const unlocked = unlocks[game.unlockKey]
+          const canAfford = points >= game.cost
+          return (
+            <div
+              key={game.id}
+              style={{
+                background: 'var(--surface)',
+                borderRadius: 16,
+                border: unlocked ? '2px solid var(--success)' : '1px solid var(--border)',
+                padding: 24,
+                opacity: unlocked ? 0.7 : 1,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              <div style={{ fontSize: 40, marginBottom: 12 }}>{game.icon}</div>
+              <h3 style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}>{game.name}</h3>
+              <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 16, flex: 1 }}>{game.desc}</p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 20, fontWeight: 800, color: 'var(--primary)' }}>{game.cost} ⭐</span>
+                <button
+                  onClick={() => handlePurchase({ id: game.unlockKey, name: game.name, cost: game.cost })}
                   disabled={unlocked || !canAfford}
                   style={{
                     padding: '8px 20px',

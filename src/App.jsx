@@ -26,6 +26,8 @@ import SciencePage from './pages/SciencePage'
 import AuthPage from './pages/AuthPage'
 import ProfilePage from './pages/ProfilePage'
 import ShopPage from './pages/ShopPage'
+import MiniGamePage from './pages/MiniGamePage'
+import DashboardPage from './pages/DashboardPage'
 
 function Navbar() {
   const { userData, isLoggedIn } = useUser()
@@ -38,6 +40,7 @@ function Navbar() {
       <div className="nav-links">
         <NavLink to="/" className={({isActive}) => 'nav-link' + (isActive ? ' active' : '')} end>דף הבית</NavLink>
         <NavLink to="/games" className={({isActive}) => 'nav-link' + (isActive ? ' active' : '')}>משחקים</NavLink>
+        <NavLink to="/dashboard" className={({isActive}) => 'nav-link' + (isActive ? ' active' : '')}>🏆 דירוג</NavLink>
         <NavLink to="/shop" className={({isActive}) => 'nav-link' + (isActive ? ' active' : '')}>חנות</NavLink>
         <NavLink to="/science" className={({isActive}) => 'nav-link' + (isActive ? ' active' : '')}>מדע</NavLink>
         <NavLink to="/blog" className={({isActive}) => 'nav-link' + (isActive ? ' active' : '')}>בלוג</NavLink>
@@ -77,11 +80,13 @@ function AppRoutes() {
             <Route path="/game/focus" element={<FocusGridGame />} />
             <Route path="/game/reflex" element={<ReflexChallengeGame />} />
             <Route path="/game/speed" element={<SpeedMatchGame />} />
+            <Route path="/game/:gameId" element={<MiniGamePage />} />
             <Route path="/science" element={<SciencePage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/login" element={<AuthPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/shop" element={<ShopPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
           </Routes>
         </main>
       </div>

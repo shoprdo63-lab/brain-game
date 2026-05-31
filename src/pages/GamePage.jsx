@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useUser } from '../context/UserContext'
 
 function shuffleArray(arr) {
   const a = [...arr]
@@ -105,6 +106,7 @@ function VictoryModal({ time, onRestart }) {
 }
 
 function GamePage() {
+  const { addPoints } = useUser()
   const [size, setSize] = useState(() => {
     const saved = localStorage.getItem('lastSize')
     return saved ? Number.parseInt(saved) : 5
@@ -162,6 +164,7 @@ function GamePage() {
         setDone(true)
         setTimeRunning(false)
         setNext(val + 1)
+        addPoints(Math.max(50, Math.floor(3000 / Math.max(time, 1))), 'schulte', time)
         saveStats(size, time)
       } else {
         setNext(val + 1)

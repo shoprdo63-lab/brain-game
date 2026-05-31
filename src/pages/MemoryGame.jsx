@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { useUser } from '../context/UserContext'
 
 const ICONS = ['🧠', '⚡', '🎯', '🔥', '🌟', '💎', '🚀', '🎵', '🍀', '🌈', '🦋', '🎲']
 
@@ -12,6 +13,7 @@ function shuffle(array) {
 }
 
 function MemoryGame() {
+  const { addPoints } = useUser()
   const [phase, setPhase] = useState('idle')
   const [cards, setCards] = useState([])
   const [flipped, setFlipped] = useState([])
@@ -75,6 +77,7 @@ function MemoryGame() {
         setHighScore(score)
         localStorage.setItem('memoryHighScore', score.toString())
       }
+      addPoints(Math.max(10, score), 'memory', score)
       setPhase('over')
     }
   }, [matched, gridSize, phase, moves, time, highScore])

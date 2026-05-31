@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { useUser } from '../context/UserContext'
 
 const WORDS = ['אדום', 'כחול', 'ירוק', 'צהוב', 'סגול']
 const COLORS = [
@@ -16,6 +17,7 @@ function generateTrial() {
 }
 
 function StroopGame() {
+  const { addPoints } = useUser()
   const [phase, setPhase] = useState('idle')
   const [trial, setTrial] = useState(null)
   const [score, setScore] = useState(0)
@@ -64,6 +66,7 @@ function StroopGame() {
       setTimeLeft(t => {
         if (t <= 1) {
           clearInterval(timerRef.current)
+          addPoints(Math.max(10, score), 'stroop', score)
           setPhase('over')
           return 0
         }
@@ -99,6 +102,7 @@ function StroopGame() {
 
     if (newRound >= TOTAL_ROUNDS) {
       clearInterval(timerRef.current)
+      addPoints(Math.max(10, newScore), 'stroop', newScore)
       setPhase('over')
     } else {
       const t = setTimeout(() => {

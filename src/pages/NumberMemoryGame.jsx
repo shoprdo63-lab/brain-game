@@ -1,6 +1,8 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { useUser } from '../context/UserContext'
 
 function NumberMemoryGame() {
+  const { addPoints } = useUser()
   const [phase, setPhase] = useState('idle')
   const [sequence, setSequence] = useState('')
   const [input, setInput] = useState('')
@@ -60,9 +62,10 @@ function NumberMemoryGame() {
       const t = setTimeout(() => showNumber(nextLevel), 600)
       timeoutsRef.current.push(t)
     } else {
+      addPoints(Math.max(10, level * 50), 'numbers', level)
       setPhase('gameover')
     }
-  }, [phase, input, sequence, level, highLevel, showNumber])
+  }, [phase, input, sequence, level, highLevel, showNumber, addPoints])
 
   useEffect(() => {
     const handleKey = (e) => {

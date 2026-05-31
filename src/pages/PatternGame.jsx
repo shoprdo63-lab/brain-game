@@ -1,8 +1,10 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { useUser } from '../context/UserContext'
 
 const GRID = 9
 
 function PatternGame() {
+  const { addPoints } = useUser()
   const [phase, setPhase] = useState('idle')
   const [pattern, setPattern] = useState([])
   const [playerIndex, setPlayerIndex] = useState(0)
@@ -82,6 +84,7 @@ function PatternGame() {
         setPlayerIndex(i => i + 1)
       }
     } else {
+      addPoints(Math.max(10, score), 'pattern', score)
       setPhase('gameover')
     }
   }, [phase, showing, pattern, playerIndex, score, level, highScore, showPattern, safeSet])

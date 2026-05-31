@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
+import { useUser } from '../context/UserContext'
 
 const COLORS = [
   { id: 0, color: '#FF6B35', glow: 'rgba(255,107,53,0.5)', name: 'כתום' },
@@ -8,6 +9,7 @@ const COLORS = [
 ]
 
 function SequenceGame() {
+  const { addPoints } = useUser()
   const [sequence, setSequence] = useState([])
   const [playerIndex, setPlayerIndex] = useState(0)
   const [phase, setPhase] = useState('idle')
@@ -105,6 +107,7 @@ function SequenceGame() {
         setPlayerIndex(i => i + 1)
       }
     } else {
+      addPoints(Math.max(10, score), 'sequence', score)
       setPhase('gameover')
       playTone(150, 500)
     }

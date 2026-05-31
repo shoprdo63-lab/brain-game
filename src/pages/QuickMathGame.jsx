@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
+import { useUser } from '../context/UserContext'
 
 function generateProblem(level) {
   const ops = ['+', '-', '×', '÷']
@@ -31,6 +32,7 @@ function generateProblem(level) {
 }
 
 function QuickMathGame() {
+  const { addPoints } = useUser()
   const [phase, setPhase] = useState('idle')
   const [problem, setProblem] = useState(null)
   const [input, setInput] = useState('')
@@ -78,12 +80,13 @@ function QuickMathGame() {
         if (t <= 1) {
           clearInterval(timerRef.current)
           setPhase('over')
+          addPoints(Math.max(10, score), 'math', score)
           return 0
         }
         return t - 1
       })
     }, 1000)
-  }, [nextProblem])
+  }, [nextProblem, addPoints, score])
 
   const submitAnswer = useCallback(() => {
     if (!problem || phase !== 'playing') return

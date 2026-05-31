@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
+import { useUser } from '../context/UserContext'
 
 const PHASE = {
   READY: 'ready',
@@ -9,6 +10,7 @@ const PHASE = {
 }
 
 function ReactionGame() {
+  const { addPoints } = useUser()
   const [phase, setPhase] = useState(PHASE.READY)
   const [time, setTime] = useState(0)
   const [history, setHistory] = useState(() => {
@@ -46,6 +48,8 @@ function ReactionGame() {
       setPhase(PHASE.RESULT)
     } else if (phase === PHASE.RESULT || phase === PHASE.TOO_EARLY) {
       if (round >= 4) {
+        const avg = history.length > 0 ? history.reduce((a, b) => a + b, 0) / history.length : 0
+        addPoints(Math.max(10, Math.floor(2000 / Math.max(avg, 1))), 'reaction', Math.round(avg))
         setPhase(PHASE.READY)
         setRound(0)
       } else {

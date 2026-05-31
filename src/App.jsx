@@ -6,6 +6,9 @@ import ReactionGame from './pages/ReactionGame'
 import SequenceGame from './pages/SequenceGame'
 import QuickMathGame from './pages/QuickMathGame'
 import StroopGame from './pages/StroopGame'
+import MemoryGame from './pages/MemoryGame'
+import PatternGame from './pages/PatternGame'
+import NumberMemoryGame from './pages/NumberMemoryGame'
 import BlogPage from './pages/BlogPage'
 import SciencePage from './pages/SciencePage'
 
@@ -34,6 +37,9 @@ function App() {
             <Route path="/game/sequence" element={<SequenceGame />} />
             <Route path="/game/math" element={<QuickMathGame />} />
             <Route path="/game/stroop" element={<StroopGame />} />
+            <Route path="/game/memory" element={<MemoryGame />} />
+            <Route path="/game/pattern" element={<PatternGame />} />
+            <Route path="/game/numbers" element={<NumberMemoryGame />} />
             <Route path="/science" element={<SciencePage />} />
             <Route path="/blog" element={<BlogPage />} />
           </Routes>
